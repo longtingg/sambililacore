@@ -4,8 +4,10 @@ from celery.utils.log import get_logger
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.core import serializers
-from config.settings import EMAIL_HOST_USER
+from django.conf import settings
 from .models import Article
+
+EMAIL_HOST_USER = getattr(settings, 'EMAIL_HOST_USER', 'noreply@example.com')
 
 
 logger = get_logger(__name__)

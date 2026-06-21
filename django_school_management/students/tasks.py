@@ -2,7 +2,7 @@ from celery import shared_task
 from celery.utils.log import get_logger
 
 from django.core.mail import send_mail
-from config.settings import EMAIL_HOST_USER
+from django.conf import settings
 
 from .models import AdmissionStudent
 
@@ -17,7 +17,7 @@ def send_admission_confirmation_email(student_id):
     send_mail(
         f'Django-School-Management: Admission confirmed for student {name}',
         f'Choosen Dept: {choosen_dept}',
-        EMAIL_HOST_USER,
-        [student.email, ], 
+        getattr(settings, 'EMAIL_HOST_USER', 'noreply@example.com'),
+        [student.email, ],
         fail_silently=False
     )
