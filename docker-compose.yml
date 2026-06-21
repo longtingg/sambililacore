@@ -1,0 +1,117 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:latest
+    container_name: dj_sms_redis
+    command: redis-server
+    ports:
+    - '6379:6379'
+    networks:
+      django_school_network:
+  postgres_db:
+    image: postgres:latest
+    container_name: django_school_pgsql
+    volumes:
+      - ./dockerdata/db:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=django-school-1
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    networks:
+      django_school_network:
+  django:
+    build: .
+    container_name: dj_sms_server
+    image: dj_sms_docker
+    command: bash -c "./pre-deploy.sh && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+      - static:/code/static
+      - media:/code/media
+    ports:
+      - "8000:8000"
+    links:
+      - redis
+      - postgres_db
+    depends_on:
+      - postgres_db
+    networks:
+      django_school_network:
+  celery:
+    build: .
+    command: celery -A config worker -l INFO
+    volumes:
+      - .:/code
+    links:
+      - redis
+      - django
+    depends_on:
+      - django
+    networks:
+      django_school_network:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: dj_sms_prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+      - --web.enable-lifecycle
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus_rules.yml:/etc/prometheus/prometheus_rules.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      django_school_network:
+    depends_on:
+      - django
+      - alertmanager
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: dj_sms_alertmanager
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    ports:
+      - "9093:9093"
+    networks:
+      django_school_network:
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: dj_sms_grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_HTTP_PORT=3000
+      - GF_INSTALL_PLUGINS=
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards/json:/etc/grafana/provisioning/dashboards/json
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      django_school_network:
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  media:
+  static:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  django_school_network:
+    driver: bridge

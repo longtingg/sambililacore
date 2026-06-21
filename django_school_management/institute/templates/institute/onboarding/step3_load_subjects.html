@@ -1,0 +1,108 @@
+{% extends "institute/onboarding/base.html" %}
+
+{% block onboarding_content %}
+<div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 max-w-4xl mx-auto mt-8">
+  <div class="mb-8 border-b border-gray-200 pb-5">
+    <h2 class="text-2xl font-bold text-gray-900">Import CBC Curriculum Subjects</h2>
+    <p class="text-sm text-gray-500 mt-1">Automate the creation of {{ semester_label|lower }}s and subject clusters based on standard Zambian MoE Frameworks. You can skip this and add subjects manually later.</p>
+  </div>
+
+  <div class="bg-blue-50 border border-blue-100 rounded-lg p-5 mb-8 text-sm text-blue-800 leading-relaxed">
+    <strong class="font-bold text-blue-900 block mb-1">How it works:</strong>
+    Choose a curriculum framework and the Grade/Form ranges your institution offers. Sambilila Core will automatically generate the required {{ semester_label|lower }}s, pull subjects from the curriculum library, and assign them to your {{ department_label|lower }} pathways. 
+    <br><br>
+    <span class="text-blue-700 italic">Tip: For Senior Secondary (Grades 10-12), ensure your {{ department_label|lower }} names match standard career pathways (e.g., STEM, Business Studies, Social Sciences).</span>
+  </div>
+
+  <form method="post" class="space-y-6">
+    {% csrf_token %}
+    
+    <div>
+      <label for="{{ form.curriculum.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-1">
+        {{ form.curriculum.label }} <span class="text-red-500">*</span>
+      </label>
+      {{ form.curriculum }}
+      {% if form.curriculum.errors %}
+        <p class="text-red-500 text-xs mt-1">{{ form.curriculum.errors.0 }}</p>
+      {% endif %}
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 mb-3">
+        {{ form.class_range.label }} <span class="text-red-500">*</span>
+      </label>
+      
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <div class="space-y-3 django-checkbox-group">
+          {{ form.class_range }}
+        </div>
+      </div>
+      {% if form.class_range.errors %}
+        <p class="text-red-500 text-xs mt-1">{{ form.class_range.errors.0 }}</p>
+      {% endif %}
+    </div>
+
+    {% if load_result and load_result.subject_groups_created %}
+    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mt-6 flex items-start">
+      <svg class="w-5 h-5 text-emerald-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <div class="text-sm text-emerald-800 font-medium">
+        Subjects successfully loaded! You can load additional grade ranges or continue to the final review.
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-between border-t border-gray-200 pt-5 gap-4">
+      
+      <a href="{% url 'institute:onboarding_step2' %}" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-150">
+        <svg class="mr-2 -ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back
+      </a>
+      
+      <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+        <button type="submit" name="load_subjects" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-emerald-600 shadow-sm text-sm font-medium rounded-md text-emerald-700 bg-emerald-50 hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-150">
+          <svg class="mr-2 -ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          Load Subjects
+        </button>
+        
+        <button type="submit" class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-150">
+          Continue
+          <svg class="ml-2 -mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+      </div>
+
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Styles Django's auto-generated checkbox list to match Tailwind */
+  .django-checkbox-group ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .django-checkbox-group li {
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb; /* Tailwind gray-200 */
+  }
+  .django-checkbox-group li:last-child {
+    border-bottom: none;
+  }
+  .django-checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #374151; /* Tailwind gray-700 */
+  }
+  .django-checkbox-group input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: #059669; /* Tailwind emerald-600 */
+    cursor: pointer;
+  }
+</style>
+{% endblock %}

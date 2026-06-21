@@ -1,0 +1,84 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+{% block extra_header %}
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap4.min.css' %}">
+{% endblock %}
+
+{% block dashboard-body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url account_urls.dashboard %}">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'students:all_applicants' %}">Applicants</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">List</li>
+    </ol>
+</nav>
+
+<div class="row">
+  <div class="col-12">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover" id="studentsDataTable">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">{{ department_label }}</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if students %}
+            {% for student in students %}
+            <tr>
+              <th scope="row">
+                <a href="{% url 'students:student_sis' pk=student.id %}">
+                  {{ student.temporary_id }}
+                </a>
+              </th>
+              <td>
+                <a href="{% url 'students:student_sis' pk=student.id %}">
+                  {% if student.admission_student.photo %}<img src="{{ student.admission_student.photo.url }}" class="mr-2 rounded-circle" height="24" width="24" alt="">{% endif %}
+                  {{ student.admission_student.name }}
+                </a>
+              </td>
+              <td>
+                <a href="{% url 'students:student_sis' pk=student.id %}">
+                  {{ student.admission_student.choosen_department.name }}
+                </a>
+              </td>
+              <td>
+                <a href="{% url 'students:student_sis' pk=student.id %}" class="btn btn-sm btn-outline-primary mr-1"><i class="fas fa-info-circle"></i></a>
+                <a href="{% url 'students:update_student' pk=student.id %}" class="btn btn-sm btn-primary">
+                  <i class="fas fa-edit"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="4" class="text-center text-muted py-4">
+                No Student Data Found
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+  <script>
+    $(document).ready(function() {
+      $('#studentsDataTable').dataTable();
+    });
+  </script>
+{% endblock extrajs %}

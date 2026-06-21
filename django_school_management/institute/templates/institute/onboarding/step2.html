@@ -1,0 +1,154 @@
+{% extends "institute/onboarding/base.html" %}
+
+{% block onboarding_content %}
+<div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 max-w-4xl mx-auto mt-8">
+  <div class="mb-8 border-b border-gray-200 pb-5">
+    <h2 class="text-2xl font-bold text-gray-900">Academic Structure</h2>
+    <p class="text-sm text-gray-500 mt-1">Set up your {{ department_label|lower }}s and the current academic session.</p>
+  </div>
+
+  <form method="post" class="space-y-6">
+    {% csrf_token %}
+
+    {% if existing_departments %}
+    <div class="mb-6">
+      <label class="text-xs font-bold uppercase tracking-wide text-gray-500 block mb-2">
+        Current {{ department_label }}s
+      </label>
+      <div class="flex flex-wrap gap-2">
+        {% for dept in existing_departments %}
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+            {{ dept.name }}{% if dept.short_name %} ({{ dept.short_name }}){% endif %}
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div>
+      <label class="flex items-center text-sm font-semibold text-gray-900 mb-1">
+        <svg class="w-5 h-5 text-emerald-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        Add New {{ department_label }}s
+      </label>
+      <p class="text-xs text-gray-500 mb-4">
+        Leave blank if you don't need to add more {{ department_label|lower }}s right now.
+      </p>
+
+      {{ dept_formset.management_form }}
+      
+      <div id="dept-forms" class="space-y-4">
+        {% for dept_form in dept_formset %}
+        <div class="dept-form-row relative bg-gray-50 border border-gray-200 rounded-lg p-4">
+          
+          <button type="button" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors duration-200" onclick="this.parentElement.remove();" title="Remove row">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div class="col-span-1 md:col-span-6">
+              <label class="block text-xs font-medium text-gray-700 mb-1">Name</label>
+              {{ dept_form.name }}
+              {% if dept_form.name.errors %}<p class="text-red-500 text-xs mt-1">{{ dept_form.name.errors.0 }}</p>{% endif %}
+            </div>
+            <div class="col-span-1 md:col-span-3">
+              <label class="block text-xs font-medium text-gray-700 mb-1">Short Name</label>
+              {{ dept_form.short_name }}
+              {% if dept_form.short_name.errors %}<p class="text-red-500 text-xs mt-1">{{ dept_form.short_name.errors.0 }}</p>{% endif %}
+            </div>
+            <div class="col-span-1 md:col-span-3">
+              <label class="block text-xs font-medium text-gray-700 mb-1">Code</label>
+              {{ dept_form.code }}
+              {% if dept_form.code.errors %}<p class="text-red-500 text-xs mt-1">{{ dept_form.code.errors.0 }}</p>{% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <button type="button" id="add-dept" class="mt-4 w-full flex justify-center items-center px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm font-medium text-emerald-600 hover:bg-emerald-50 hover:border-emerald-500 transition-colors duration-200">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        Add Another {{ department_label }}
+      </button>
+    </div>
+
+    <div class="border-t border-gray-200 pt-6 mt-8">
+      <label class="flex items-center text-sm font-semibold text-gray-900 mb-4">
+        <svg class="w-5 h-5 text-emerald-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        Academic Session
+      </label>
+      
+      <div class="w-full md:w-1/2">
+        <label for="{{ session_form.year.id_for_label }}" class="block text-xs font-medium text-gray-700 mb-1">Starting Year <span class="text-red-500">*</span></label>
+        {{ session_form.year }}
+        {% if session_form.year.errors %}
+          <p class="text-red-500 text-xs mt-1">{{ session_form.year.errors.0 }}</p>
+        {% endif %}
+        <p class="text-xs text-gray-500 mt-1">e.g. {% now "Y" %} for the current academic session.</p>
+      </div>
+    </div>
+
+    <div class="mt-8 flex items-center justify-between border-t border-gray-200 pt-5">
+      <a href="{% url 'institute:onboarding_step1' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-150">
+        <svg class="mr-2 -ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back to Profile
+      </a>
+      
+      <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-150">
+        Save & Continue
+        <svg class="ml-2 -mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  const formsContainer = document.getElementById('dept-forms');
+  const addBtn = document.getElementById('add-dept');
+  
+  // Dynamically find the TOTAL_FORMS input regardless of the formset prefix
+  const totalForms = document.querySelector('input[id$="-TOTAL_FORMS"]');
+
+  if (addBtn && totalForms) {
+    addBtn.addEventListener('click', function() {
+      const formIdx = parseInt(totalForms.value);
+      const template = formsContainer.querySelector('.dept-form-row');
+      if (!template) return;
+
+      const newRow = template.cloneNode(true);
+      
+      // Clear values and update name/id indices
+      newRow.querySelectorAll('input, select').forEach(function(input) {
+        const name = input.getAttribute('name');
+        if (name) {
+          input.setAttribute('name', name.replace(/-\d+-/, '-' + formIdx + '-'));
+        }
+        const id = input.getAttribute('id');
+        if (id) {
+          input.setAttribute('id', id.replace(/-\d+-/, '-' + formIdx + '-'));
+        }
+        if (input.type !== 'hidden') {
+          input.value = '';
+        }
+      });
+      
+      // Update labels
+      newRow.querySelectorAll('label').forEach(function(label) {
+        const forAttr = label.getAttribute('for');
+        if (forAttr) {
+          label.setAttribute('for', forAttr.replace(/-\d+-/, '-' + formIdx + '-'));
+        }
+      });
+      
+      // Clear any cloned Django error lists
+      newRow.querySelectorAll('p.text-red-500').forEach(function(el) { el.remove(); });
+
+      formsContainer.appendChild(newRow);
+      totalForms.value = formIdx + 1;
+    });
+  }
+})();
+</script>
+{% endblock %}

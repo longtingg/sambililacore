@@ -1,0 +1,90 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ request_institute.site_title|default:"SAMBILILA CORE" }}</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ request_institute.favicon.url }}" type="image/png">
+    
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="{% static 'landing/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/LineIcons.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/main.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+  </head>
+
+  <body>
+
+  {% block main_content %}
+  {% endblock %}
+
+    <!-- Footer Section Start -->
+    <footer>
+      <section id="footer-Content">
+        <div class="container">
+          <div class="row">
+            <!-- Logo Section -->
+            <div class="col-lg-4 col-md-6 col-sm-6">
+              <div class="footer-logo">
+                 <img src="{% if request_institute.logo %}{{ request_institute.logo.url }}{% else %}{% static 'landing/img/footer-logo.png' %}{% endif %}" alt="Sambilila Core">
+              </div>
+              <p>Modernizing educational management in Zambia.</p>
+            </div>
+
+            <!-- Zambian Education Resources -->
+            <div class="col-lg-4 col-md-6 col-sm-6">
+              <div class="widget">
+                <h3 class="block-title">Zambian Education</h3>
+                <ul class="menu">
+                  <li><a href="https://en.wikipedia.org/wiki/Education_in_Zambia" target="_blank">- Evolution of Education in Zambia</a></li>
+                  <li><a href="https://www.moe.gov.zm/" target="_blank">- Ministry of Education (MoE)</a></li>
+                  <li><a href="https://www.exams-council.org.zm/" target="_blank">- Examinations Council of Zambia</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="col-lg-4 col-md-6 col-sm-6">
+              <div class="widget">
+                <h3 class="block-title">Subscribe</h3>
+                <p>Get updates from Sambilila Core.</p>
+                <div class="subscribe-area">
+                  <form action="{% url 'articles:newsletter'%}" method="post">
+                    {% csrf_token %}
+                    <input type="email" name="email" class="form-control" placeholder="Enter Email">
+                    <button type="submit"><i class="lni-chevron-right"></i></button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="copyright">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <p>&copy; {% now "Y" %} SAMBILILA CORE. All Rights Reserved.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </footer>
+    <!-- Footer Section End -->
+
+    <!-- Scripts -->
+    <script src="{% static 'landing/js/jquery-min.js' %}"></script>
+    <script src="{% static 'landing/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'landing/js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+
+  </body>
+</html>
