@@ -74,7 +74,7 @@ def profile_complete(request):
 def dashboard(request):
     institute = getattr(request.user, 'institute', None)
     if not institute:
-        active = InstituteProfile.objects.filter(active=True).first()
+        active = InstituteProfile.objects.filter(is_active=True).first() or InstituteProfile.objects.filter(active=True).first()
         if active:
             request.user.institute = active
             request.user.save(update_fields=['institute'])

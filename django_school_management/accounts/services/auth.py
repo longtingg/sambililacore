@@ -26,7 +26,7 @@ def handle_superuser_creation(user):
     user.requested_role = AccountTypesEnum.admin.value
     if not user.institute:
         from django_school_management.institute.models import InstituteProfile
-        active = InstituteProfile.objects.filter(active=True).first()
+        active = InstituteProfile.objects.filter(is_active=True).first() or InstituteProfile.objects.filter(active=True).first()
         if active:
             user.institute = active
     user.save()

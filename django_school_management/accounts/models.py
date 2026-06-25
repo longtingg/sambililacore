@@ -10,6 +10,7 @@ from django.conf import settings
 from django.urls import reverse
 
 from .utils import model_help_texts
+from .validators import validate_zambian_nrc, validate_e164_phone
 
 
 class User(ExportModelOperationsMixin('user'), AbstractUser):
@@ -49,6 +50,22 @@ class User(ExportModelOperationsMixin('user'), AbstractUser):
         on_delete=models.SET_NULL,
         null=True, blank=True,
         related_name='users',
+    )
+    phone_number = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        unique=True,
+        validators=[validate_e164_phone],
+        help_text='E.164 format, e.g. +260977123456',
+    )
+    nrc_number = models.CharField(
+        max_length=15,
+        blank=True,
+        null=True,
+        unique=True,
+        validators=[validate_zambian_nrc],
+        help_text='Zambian NRC format: NNNNNN/NN/N, e.g. 123456/78/9',
     )
 
     def get_author_url(self):

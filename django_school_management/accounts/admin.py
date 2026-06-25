@@ -25,21 +25,24 @@ class CustomUserAdmin(auth_admin.UserAdmin):
     add_form = UserRegistrationForm
     model = User
     fieldsets = (
-        ("User", {"fields": ("approval_status", "requested_role")}),
+        ("SCES User", {"fields": ("approval_status", "requested_role", "institute", "phone_number", "nrc_number")}),
     ) + auth_admin.UserAdmin.fieldsets
     add_fieldsets = (
         (None, {
             "classes": ("wide",),
             "fields": (
                 "username", "email", "password1", "password2", "is_staff",
-                "is_active", "is_superuser", "groups", "user_permissions"
+                "is_active", "is_superuser", "groups", "user_permissions",
+                "phone_number", "nrc_number",
             )}
          ),
     )
-    list_display = ["username", "is_superuser", "approval_status", "requested_role"]
-    list_editable = ["approval_status", "requested_role", ]
-    search_fields = ["approval_status", "requested_role"]
+    list_display = ["username", "email", "institute", "is_superuser", "approval_status", "requested_role"]
+    list_filter = ["institute", "approval_status", "requested_role", "is_superuser"]
+    list_editable = ["approval_status", "requested_role"]
+    search_fields = ["username", "email", "phone_number", "nrc_number", "approval_status", "requested_role"]
     resource_class = UserResource
+    autocomplete_fields = ["institute"]
 
 
 class UserProfileResource(resources.ModelResource):

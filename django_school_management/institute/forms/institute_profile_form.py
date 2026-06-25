@@ -17,6 +17,7 @@ class InstituteProfileCreateForm(forms.ModelForm):
         if self.request is not None and self.request.user.is_authenticated:
             self.instance.created_by = self.request.user
             self.instance.active = True
+            self.instance.is_active = True
         institute = super().save(commit=commit)
         if commit and self.request and self.request.user.is_authenticated:
             user = self.request.user

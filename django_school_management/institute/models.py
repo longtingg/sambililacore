@@ -5,6 +5,7 @@ from django_prometheus.models import ExportModelOperationsMixin
 from django.db import models
 from django.conf import settings
 from django.utils.safestring import mark_safe
+from django.utils.text import slugify
 from django.urls import reverse
 
 from .utils import model_help_texts
@@ -106,7 +107,18 @@ class InstituteProfile(ExportModelOperationsMixin('institute_profile'), models.M
     
     motto = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    active = models.BooleanField(default=False, unique=True)
+    active = models.BooleanField(default=False)
+    is_active = models.BooleanField(
+        default=False,
+        help_text='Whether this school is currently active on the platform.',
+    )
+    slug = models.SlugField(
+        max_length=120,
+        unique=True,
+        blank=True,
+        null=True,
+        help_text='URL-safe identifier for this school (auto-generated from name).',
+    )
     onboarding_completed = models.BooleanField(default=False)
     
     institute_type = models.CharField(
@@ -140,6 +152,17 @@ class InstituteProfile(ExportModelOperationsMixin('institute_profile'), models.M
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.name:
+            base = slugify(self.name)[:100] or 'school'
+            slug = base
+            n = 1
+            while InstituteProfile.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f'{base}-{n}'
+                n += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
     @property
     def onboarding_step(self):

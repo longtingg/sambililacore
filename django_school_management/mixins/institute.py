@@ -51,4 +51,4 @@ def get_user_institute(user):
 def get_active_institute():
     """Return the active institute for public/unauthenticated context (e.g. admission form)."""
     from django_school_management.institute.models import InstituteProfile
-    return InstituteProfile.objects.filter(active=True).first()
+    return InstituteProfile.objects.filter(is_active=True).first() or InstituteProfile.objects.filter(active=True).first()

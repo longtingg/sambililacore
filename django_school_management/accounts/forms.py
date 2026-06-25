@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model, forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+from allauth.account.forms import LoginForm as AllauthLoginForm
+
 from .models import CommonUserProfile, SocialLink
 
 User = get_user_model()
@@ -99,6 +101,29 @@ UserProfileSocialLinksFormSet = inlineformset_factory(
     extra=4,
     max_num=4
 )
+
+class SCESLoginForm(AllauthLoginForm):
+    """
+    Extends allauth's LoginForm to accept email, phone number, or NRC as
+    the login identifier (in addition to the standard username). The actual
+    multi-identifier lookup is handled by MultiIdentifierBackend; this form
+    only adjusts the field label/placeholder and relaxes clean_login so that
+    non-email identifiers pass allauth's own validation step.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        login_field = self.fields.get('login')
+        if login_field:
+            login_field.label = _('Email, phone, or NRC')
+            login_field.widget.attrs.update({
+                'placeholder': 'Email, phone number, or NRC',
+                'autocomplete': 'username',
+            })
+
+    def clean_login(self):
+        return self.cleaned_data.get('login', '').strip()
+
 
 class CommonUserProfileForm(djform.ModelForm):
     """Core details of user profile created only after account verification by institute."""

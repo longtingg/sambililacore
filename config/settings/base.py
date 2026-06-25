@@ -130,13 +130,18 @@ USE_X_FORWARDED_PORT = True
 SITE_ID = 1
 AUTH_USER_MODEL = 'accounts.User'
 AUTHENTICATION_BACKENDS = [
+    'django_school_management.accounts.backends.MultiIdentifierBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
 # allauth
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_LOGIN_METHODS = {'username'}
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_FORMS = {
+    'login': 'django_school_management.accounts.forms.SCESLoginForm',
+}
 
 # Email/Redirects
 LOGIN_REDIRECT_URL = '/'

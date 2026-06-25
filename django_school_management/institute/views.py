@@ -35,7 +35,7 @@ def _onboarding_context(current_step):
 def _resolve_institute(user):
     if hasattr(user, 'institute') and user.institute:
         return user.institute
-    active = InstituteProfile.objects.filter(active=True).first()
+    active = InstituteProfile.objects.filter(is_active=True).first() or InstituteProfile.objects.filter(active=True).first()
     return active
 
 
@@ -47,6 +47,7 @@ def onboarding_step1(request):
         if form.is_valid():
             profile = form.save(commit=False)
             profile.active = True
+            profile.is_active = True
             if not profile.pk or not profile.created_by_id:
                 profile.created_by = request.user
             profile.save()
@@ -172,8 +173,8 @@ class InstituteProfileDetailDashboard(LoginRequiredMixin, DetailView):
 
 class SetActiveInstituteProfile(LoginRequiredMixin, View):
     def post(self, request, institute_pk):
-        InstituteProfile.objects.all().update(active=False)
         institute = get_object_or_404(InstituteProfile, pk=institute_pk)
-        institute.active = True
-        institute.save()
+        institute.is_active = not institute.is_active
+        institute.active = institute.is_active
+        institute.save(update_fields=['is_active', 'active'])
         return redirect('institute:institute_profile_list')
