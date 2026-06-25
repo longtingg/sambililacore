@@ -15,11 +15,11 @@ from drf_yasg import openapi
 # API Documentation
 schema_view = get_schema_view(
     openapi.Info(
-        title="Django School Management API",
+        title="SCES — Sambilila Cole Educational System API",
         default_version='v1',
-        description="Comprehensive API for school management system",
-        terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@snippets.local"),
+        description="REST API for the Sambilila Cole Educational System (SCES) school management platform.",
+        terms_of_service="https://www.ecz.ac.zm/",
+        contact=openapi.Contact(email="admin@sces.edu.zm"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
