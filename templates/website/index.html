@@ -1,5 +1,5 @@
-{% extends 'website/partials/website_base.html' %} 
-{% load static %} 
+{% extends 'website/partials/website_base.html' %}
+{% load static %}
 
 {% block main_content %}
 <header id="home" class="hero-area nav-hero">
@@ -11,11 +11,11 @@
   {% include 'website/partials/website_navbar.html' %}
 
   <div class="container">
-    <div class="row space-100">
+    <div class="row space-100 align-items-center">
       <div class="col-lg-6 col-md-12 col-xs-12">
         <div class="contents">
-          <h2>SAMBILILA CORE</h2>
-          <p>
+          <h2>Sambilila Cole<br>Educational System</h2>
+          <p style="color:rgba(255,255,255,0.85); font-size:1.05rem; margin-bottom:1.5rem;">
             {% if request_institute.motto %}
               {{ request_institute.motto|safe }}
             {% else %}
@@ -29,30 +29,71 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-6 col-md-12 col-xs-12 p-0">
-        <div class="intro-img">
-          <img src="{% static 'landing/img/intro.png' %}" alt="Sambilila Core" style="width: 585px; height: 398px; margin-top: 113px" />
+
+      <div class="col-lg-6 col-md-12 col-xs-12">
+        <div class="sces-stats-widget glass-card">
+          <div style="text-align:center; margin-bottom:1.2rem;">
+            <span style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.6); font-weight:600;">
+              <span class="sces-stat-dot"></span>Live Platform Stats
+            </span>
+          </div>
+          <div class="row" style="align-items:stretch;">
+            <div class="col-6">
+              <div class="sces-stat-item">
+                <div class="sces-stat-number" id="stat-schools">—</div>
+                <div class="sces-stat-label">Schools on SCES</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="sces-stat-item" style="border-left:1px solid rgba(255,255,255,0.15);">
+                <div class="sces-stat-number" id="stat-users">—</div>
+                <div class="sces-stat-label">Users Online Now</div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center; margin-top:1.2rem; font-size:0.72rem; color:rgba(255,255,255,0.45);">
+            Updates every 30 seconds
+          </div>
         </div>
       </div>
     </div>
   </div>
 </header>
-<section class="py-5" style="background: #0f172a; color: #ffffff;">
+
+<script>
+(function() {
+  function updateStats() {
+    fetch('{% url "pages:platform_stats" %}')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var sc = document.getElementById('stat-schools');
+        var su = document.getElementById('stat-users');
+        if (sc) sc.textContent = d.total_schools !== undefined ? d.total_schools : '—';
+        if (su) su.textContent = d.active_sessions !== undefined ? d.active_sessions : '—';
+      })
+      .catch(function() {});
+  }
+  updateStats();
+  setInterval(updateStats, 30000);
+})();
+</script>
+
+<section class="py-5" style="background: linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#134e4a 100%); color: #ffffff;">
     <div class="container text-center">
         <div class="row justify-content-center">
-            <div class="col-lg-8" style="min-height: 150px; display: flex; align-items: center; justify-content: center;">
+            <div class="col-lg-8" style="min-height: 140px; display: flex; align-items: center; justify-content: center;">
                 <div id="quote-carousel" class="text-center">
                     <div class="quote-slide" style="display: block;">
-                        <p style="font-style: italic; font-size: 1.25rem;">"The easiest way to destroy a nation is to destroy its education system."</p>
-                        <small style="color: #34d399; font-weight: bold;">— Dr. Kenneth Kaunda</small>
+                        <p style="font-style: italic; font-size: 1.15rem; color:rgba(255,255,255,0.9);">"The easiest way to destroy a nation is to destroy its education system."</p>
+                        <small style="color: #34d399; font-weight: 700;">— Dr. Kenneth Kaunda</small>
                     </div>
                     <div class="quote-slide" style="display: none;">
-                        <p style="font-style: italic; font-size: 1.25rem;">"Education is the best equalizer. With proper tools, any child can succeed."</p>
-                        <small style="color: #34d399; font-weight: bold;">— Hakainde Hichilema</small>
+                        <p style="font-style: italic; font-size: 1.15rem; color:rgba(255,255,255,0.9);">"Education is the best equalizer. With proper tools, any child can succeed."</p>
+                        <small style="color: #34d399; font-weight: 700;">— Hakainde Hichilema</small>
                     </div>
                     <div class="quote-slide" style="display: none;">
-                        <p style="font-style: italic; font-size: 1.25rem;">"We must build a nation based on integrity, hard work, and intellectual rigor."</p>
-                        <small style="color: #34d399; font-weight: bold;">— Levy Mwanawasa</small>
+                        <p style="font-style: italic; font-size: 1.15rem; color:rgba(255,255,255,0.9);">"We must build a nation based on integrity, hard work, and intellectual rigor."</p>
+                        <small style="color: #34d399; font-weight: 700;">— Levy Mwanawasa</small>
                     </div>
                 </div>
             </div>
@@ -61,14 +102,17 @@
 </section>
 
 <script>
-    let current = 0;
-    const slides = document.querySelectorAll('.quote-slide');
-    setInterval(() => {
-        slides[current].style.display = 'none';
-        current = (current + 1) % slides.length;
-        slides[current].style.display = 'block';
-    }, 6000);
+    (function() {
+        var current = 0;
+        var slides = document.querySelectorAll('.quote-slide');
+        setInterval(function() {
+            slides[current].style.display = 'none';
+            current = (current + 1) % slides.length;
+            slides[current].style.display = 'block';
+        }, 6000);
+    })();
 </script>
+
 <section id="services" class="section">
   <div class="container">
     <div class="row justify-content-center">
@@ -90,12 +134,13 @@
     </div>
   </div>
 </section>
+
 <section id="features" class="section">
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
         <div class="features-text section-header text-center">
-          <h2 class="section-title">Services & Portals</h2>
+          <h2 class="section-title">Services &amp; Portals</h2>
         </div>
       </div>
     </div>
@@ -135,21 +180,22 @@
     </div>
   </div>
 </section>
+
 <section id="blog" class="section">
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
         <div class="blog-text section-header text-center">
           <h2 class="section-title">Latest Blog Posts</h2>
-          <p>Read our latest updates and articles on our <a href="{% url 'articles:all_articles' %}">blog.</a></p>
+          <p>Read our latest updates and articles on our <a href="{% url 'articles:all_articles' %}" style="color:#14b8a6;">blog.</a></p>
         </div>
       </div>
     </div>
-    <div class="row">    
+    <div class="row">
       {% for article in recent_blogs %}
         <div class="col-lg-4 col-md-6 col-xs-12 blog-item">
           <div class="blog-item-wrapper">
-            <div class="blog-item-text">
+            <div class="blog-item-text" style="padding:1.5rem;">
               <h3><a href="{{ article.get_absolute_url }}">{{ article.title|truncatechars:30 }}</a></h3>
               <p>{{ article.short_description }}</p>
             </div>

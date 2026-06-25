@@ -1,48 +1,48 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-md fixed-top scrolling-navbar">
+<nav class="navbar navbar-expand-md fixed-top scrolling-navbar glass-nav">
     <div class="container">
-          <a href="/" class="navbar-brand">
-            <img src="{% if request_institute.logo %}{{ request_institute.logo.url }}{% else %}{% static 'landing/img/footer-logo.png' %}{% endif %}"
-              alt="{{ request_institute.name }}"
-              height="60">
-            </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="lni-menu"></i>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav mr-auto w-100 justify-content-end">
+        <a href="/" class="navbar-brand" style="display:flex; align-items:center; gap:0.7rem;">
+          {% if request_institute.logo %}
+            <img src="{{ request_institute.logo.url }}" alt="SCES" height="44" style="border-radius:8px;">
+          {% else %}
+            <span style="display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:10px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); font-weight:800; font-size:0.8rem; color:#fff; letter-spacing:-0.02em;">SCES</span>
+          {% endif %}
+          <span style="color:#fff; font-weight:700; font-size:1rem; letter-spacing:-0.01em;">
+            {{ request_institute.name|default:"SCES" }}
+          </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="lni-menu"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto w-100 justify-content-end">
+            <li class="nav-item">
+              <a class="nav-link page-scroll" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link page-scroll" href="{% url 'notices:notices' %}">Notices</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link page-scroll" href="{% url 'articles:home' %}">Blog</a>
+            </li>
+            {% if request.user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link page-scroll" href="/">Home</a>
+                <a class="nav-link page-scroll" href="{% url account_urls.profile_complete %}">My Account</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link page-scroll" href="{% url 'notices:notices' %}">
-                  Notices
-                </a>
+                <a class="nav-link page-scroll" href="{% url 'account_logout' %}">Sign Out</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link page-scroll" href="{% url 'articles:home' %}">Blog</a>
+                <a class="btn btn-singin" href="{% url account_urls.dashboard %}">Dashboard</a>
               </li>
-              {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                  <a class="nav-link page-scroll" href="{% url account_urls.profile_complete %}">My Account</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link page-scroll" href="{% url 'account_logout' %}">
-                    Logout
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="btn btn-singin" href="{% url account_urls.dashboard %}">Dashboard</a>
-                </li>
-	            {% else %}
-	            <li class="nav-item">
-                  <a class="nav-link page-scroll" href="{% url 'account_login' %}">
-                    signIn/SignUp
-                  </a>
+            {% else %}
+              <li class="nav-item">
+                <a class="btn btn-singin" href="{% url 'account_login' %}">Sign In</a>
               </li>
-              {% endif %}
-            </ul>
-          </div>
+            {% endif %}
+          </ul>
+        </div>
     </div>
 </nav>

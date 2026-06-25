@@ -1,6 +1,9 @@
+import json
 from django.conf import settings
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 
 from django_school_management.academics.models import Department
 from django_school_management.students.forms import StudentForm
@@ -8,6 +11,21 @@ from django_school_management.students.models import AdmissionStudent
 from django_school_management.mixins.institute import get_active_institute
 from django_school_management.articles.models import Article
 from django_school_management.students.tasks import send_admission_confirmation_email
+from django_school_management.institute.models import InstituteProfile
+
+
+def platform_stats(request):
+    """Public endpoint: total schools and estimated active sessions."""
+    total_schools = InstituteProfile.objects.count()
+    try:
+        from django.contrib.sessions.models import Session
+        active_sessions = Session.objects.filter(expire_date__gt=timezone.now()).count()
+    except Exception:
+        active_sessions = 0
+    return JsonResponse({
+        'total_schools': total_schools,
+        'active_sessions': active_sessions,
+    })
 
 
 def index(request):

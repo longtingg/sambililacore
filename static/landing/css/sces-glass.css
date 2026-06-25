@@ -1,0 +1,322 @@
+/*
+ * SCES — Sambilila Cole Educational System
+ * Glass Design System
+ * Lightweight, mobile-first, no external dependencies
+ */
+
+/* ======================================================
+   BRAND TOKENS
+   ====================================================== */
+:root {
+  --sces-indigo:        #4f46e5;
+  --sces-indigo-dark:   #3730a3;
+  --sces-violet:        #7c3aed;
+  --sces-teal:          #14b8a6;
+  --sces-teal-dark:     #0d9488;
+  --sces-amber:         #f59e0b;
+  --sces-rose:          #f43f5e;
+  --sces-sky:           #0ea5e9;
+
+  --sces-gradient:      linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #14b8a6 100%);
+  --sces-gradient-h:    linear-gradient(90deg,  #4f46e5 0%, #14b8a6 100%);
+  --sces-gradient-dark: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #134e4a 100%);
+
+  --glass-bg:           rgba(255, 255, 255, 0.14);
+  --glass-bg-dark:      rgba(15, 23, 42, 0.60);
+  --glass-bg-light:     rgba(255, 255, 255, 0.80);
+  --glass-border:       rgba(255, 255, 255, 0.25);
+  --glass-border-dark:  rgba(255, 255, 255, 0.10);
+  --glass-blur:         blur(14px) saturate(160%);
+  --glass-shadow:       0 8px 32px rgba(0, 0, 0, 0.14);
+  --glass-shadow-sm:    0 2px 12px rgba(0, 0, 0, 0.10);
+
+  --radius-xs:  6px;
+  --radius-sm:  10px;
+  --radius-md:  16px;
+  --radius-lg:  22px;
+  --radius-xl:  32px;
+  --radius-pill: 9999px;
+
+  --sces-font: 'Inter', 'Poppins', 'Rubik', system-ui, -apple-system, sans-serif;
+  --sces-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ======================================================
+   UTILITY CLASSES
+   ====================================================== */
+.glass-card {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow);
+  transition: box-shadow var(--sces-transition), transform var(--sces-transition);
+}
+
+.glass-card:hover {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+  transform: translateY(-2px);
+}
+
+.glass-card-dark {
+  background: var(--glass-bg-dark);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border-dark);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-card-light {
+  background: var(--glass-bg-light);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow-sm);
+}
+
+.sces-gradient-bg   { background: var(--sces-gradient); }
+.sces-gradient-text {
+  background: var(--sces-gradient-h);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ======================================================
+   HERO SECTION OVERRIDES
+   ====================================================== */
+.hero-area .overlay,
+.hero-area .overlay :nth-child(1),
+.hero-area .overlay :nth-child(2),
+.menu-bg {
+  background: var(--sces-gradient) !important;
+}
+
+.hero-area .contents h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* ======================================================
+   LIVE STATS WIDGET
+   ====================================================== */
+.sces-stats-widget {
+  padding: 2rem 1.5rem;
+  margin-top: 4rem;
+  color: #fff;
+}
+
+.sces-stat-item {
+  text-align: center;
+  padding: 1rem 0.5rem;
+}
+
+.sces-stat-number {
+  font-size: 3rem;
+  font-weight: 800;
+  font-family: var(--sces-font);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  min-height: 3.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sces-stat-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.75);
+  margin-top: 0.4rem;
+  font-weight: 600;
+}
+
+.sces-stat-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  margin-right: 6px;
+  animation: sces-pulse 2s infinite;
+  vertical-align: middle;
+}
+
+@keyframes sces-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(1.3); }
+}
+
+.sces-stat-divider {
+  width: 1px;
+  background: rgba(255,255,255,0.2);
+  align-self: stretch;
+  margin: 0.5rem 0;
+}
+
+/* ======================================================
+   NAVBAR GLASS OVERRIDE
+   ====================================================== */
+.navbar.glass-nav {
+  background: rgba(79, 70, 229, 0.55) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+  transition: background var(--sces-transition), box-shadow var(--sces-transition);
+}
+
+.navbar.glass-nav.scrolled,
+.navbar.glass-nav.menu-bg {
+  background: var(--sces-gradient) !important;
+}
+
+/* ======================================================
+   SECTION / CARD OVERRIDES
+   ====================================================== */
+.services-item,
+#services .services-item {
+  background: var(--glass-bg-light);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(79, 70, 229, 0.12);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow-sm);
+  padding: 2rem 1.5rem;
+  transition: box-shadow var(--sces-transition), transform var(--sces-transition);
+}
+
+.services-item:hover {
+  box-shadow: 0 12px 32px rgba(79, 70, 229, 0.15);
+  transform: translateY(-3px);
+}
+
+#features .feature-item {
+  border-radius: var(--radius-sm);
+  transition: background var(--sces-transition);
+}
+
+/* ======================================================
+   FOOTER GLASS
+   ====================================================== */
+footer {
+  background: var(--sces-gradient-dark) !important;
+}
+
+footer p, footer a, footer .block-title, footer .menu li a {
+  color: rgba(255,255,255,0.80) !important;
+}
+
+footer a:hover { color: #fff !important; }
+
+.copyright {
+  border-top: 1px solid rgba(255,255,255,0.10);
+  background: transparent !important;
+}
+
+/* ======================================================
+   BUTTONS
+   ====================================================== */
+.btn-sces-primary {
+  background: var(--sces-gradient);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 0.65rem 1.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  transition: box-shadow var(--sces-transition), transform var(--sces-transition);
+  display: inline-block;
+}
+
+.btn-sces-primary:hover {
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-border-filled {
+  background: var(--sces-gradient) !important;
+  border-color: transparent !important;
+  border-radius: var(--radius-pill) !important;
+}
+
+/* ======================================================
+   DASHBOARD GLASS OVERRIDES
+   ====================================================== */
+.stat-card {
+  background: var(--glass-bg-light) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(79, 70, 229, 0.08) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+.welcome-banner {
+  background: var(--sces-gradient) !important;
+  border-radius: var(--radius-md);
+  padding: 1.5rem 2rem;
+  color: #fff;
+}
+
+.welcome-banner h2, .welcome-banner p {
+  color: #fff !important;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%) !important;
+}
+
+/* ======================================================
+   BLOG CARDS
+   ====================================================== */
+.blog-item-wrapper {
+  background: var(--glass-bg-light);
+  border: 1px solid rgba(79, 70, 229, 0.10);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--glass-shadow-sm);
+  transition: box-shadow var(--sces-transition), transform var(--sces-transition);
+}
+
+.blog-item-wrapper:hover {
+  box-shadow: 0 12px 32px rgba(79, 70, 229, 0.14);
+  transform: translateY(-3px);
+}
+
+/* ======================================================
+   MOBILE OPTIMISATIONS
+   ====================================================== */
+@media (max-width: 767px) {
+  .sces-stats-widget { margin-top: 2rem; }
+  .sces-stat-number  { font-size: 2.2rem; min-height: 2.8rem; }
+  .hero-area .contents { padding: 140px 0 60px; }
+  .hero-area .contents h2 { font-size: 1.8rem; }
+
+  .glass-card,
+  .glass-card-dark,
+  .glass-card-light {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(255,255,255,0.92);
+  }
+}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-card      { background: rgba(255,255,255,0.95); }
+  .glass-card-dark { background: rgba(15, 23, 42, 0.92); }
+  .sces-stats-widget { background: rgba(79, 70, 229, 0.85); }
+}

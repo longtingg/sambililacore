@@ -15,6 +15,7 @@ from . import views
 app_name = 'pages'
 urlpatterns = [
      path('', views.index, name='landing'),
+     path('api/platform-stats/', views.platform_stats, name='platform_stats'),
      path('admission/', views.online_admission, name='online_admission'),
      path('admission/payment/<int:pk>/', views.online_admission_payment,
           name='online_admission_payment'),

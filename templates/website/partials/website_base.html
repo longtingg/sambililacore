@@ -3,20 +3,26 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{{ request_institute.site_title|default:"SAMBILILA CORE" }}</title>
-    
+    <title>{{ request_institute.site_title|default:"SCES | Sambilila Cole Educational System" }}</title>
+
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ request_institute.favicon.url }}" type="image/png">
-    
-    <!-- CSS Links -->
+    {% if request_institute.site_favicon %}
+      <link rel="shortcut icon" href="{{ request_institute.site_favicon.url }}" type="image/png">
+    {% elif request_institute.logo %}
+      <link rel="shortcut icon" href="{{ request_institute.logo.url }}" type="image/png">
+    {% else %}
+      <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/png">
+    {% endif %}
+
+    <!-- CSS -->
     <link rel="stylesheet" href="{% static 'landing/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'landing/css/LineIcons.css' %}">
     <link rel="stylesheet" href="{% static 'landing/css/nivo-lightbox.css' %}">
     <link rel="stylesheet" href="{% static 'landing/css/main.css' %}">
-    
+    <link rel="stylesheet" href="{% static 'landing/css/sces-glass.css' %}">
+
     {% block extra_css %}{% endblock %}
   </head>
 
@@ -25,27 +31,30 @@
   {% block main_content %}
   {% endblock %}
 
-    <!-- Footer Section Start -->
+    <!-- Footer -->
     <footer>
       <section id="footer-Content">
         <div class="container">
           <div class="row">
-            <!-- Logo Section -->
+            <!-- Brand -->
             <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="footer-logo">
-                 <img src="{% if request_institute.logo %}{{ request_institute.logo.url }}{% else %}{% static 'landing/img/footer-logo.png' %}{% endif %}" alt="Sambilila Core">
+              <div class="footer-logo" style="margin-bottom:1rem;">
+                <img src="{% if request_institute.logo %}{{ request_institute.logo.url }}{% else %}{% static 'landing/img/footer-logo.png' %}{% endif %}"
+                     alt="SCES" style="max-height:60px;">
               </div>
-              <p>Modernizing educational management in Zambia.</p>
+              <p style="color:rgba(255,255,255,0.7); font-size:0.88rem; line-height:1.6;">
+                Sambilila Cole Educational System (SCES) — modernising school management across Zambia.
+              </p>
             </div>
 
-            <!-- Zambian Education Resources -->
+            <!-- Education Links -->
             <div class="col-lg-4 col-md-6 col-sm-6">
               <div class="widget">
-                <h3 class="block-title">Zambian Education</h3>
-                <ul class="menu">
-                  <li><a href="https://en.wikipedia.org/wiki/Education_in_Zambia" target="_blank">- Evolution of Education in Zambia</a></li>
-                  <li><a href="https://www.moe.gov.zm/" target="_blank">- Ministry of Education (MoE)</a></li>
-                  <li><a href="https://www.exams-council.org.zm/" target="_blank">- Examinations Council of Zambia</a></li>
+                <h3 class="block-title" style="color:#fff; font-size:0.95rem; font-weight:700; margin-bottom:1rem;">Zambian Education</h3>
+                <ul class="menu" style="line-height:2;">
+                  <li><a href="https://www.moe.gov.zm/" target="_blank" rel="noopener">Ministry of Education (MoE)</a></li>
+                  <li><a href="https://www.exams-council.org.zm/" target="_blank" rel="noopener">Examinations Council of Zambia</a></li>
+                  <li><a href="https://en.wikipedia.org/wiki/Education_in_Zambia" target="_blank" rel="noopener">Education in Zambia</a></li>
                 </ul>
               </div>
             </div>
@@ -53,14 +62,25 @@
             <!-- Newsletter -->
             <div class="col-lg-4 col-md-6 col-sm-6">
               <div class="widget">
-                <h3 class="block-title">Subscribe</h3>
-                <p>Get updates from Sambilila Core.</p>
+                <h3 class="block-title" style="color:#fff; font-size:0.95rem; font-weight:700; margin-bottom:1rem;">Stay Updated</h3>
+                <p style="color:rgba(255,255,255,0.7); font-size:0.88rem;">Get SCES platform updates.</p>
                 <div class="subscribe-area">
-                  <form action="{% url 'articles:newsletter'%}" method="post">
+                  <form action="{% url 'articles:newsletter' %}" method="post">
                     {% csrf_token %}
-                    <input type="email" name="email" class="form-control" placeholder="Enter Email">
+                    <input type="email" name="email" class="form-control" placeholder="Enter your email">
                     <button type="submit"><i class="lni-chevron-right"></i></button>
                   </form>
+                </div>
+                <!-- Official social links -->
+                <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+                  <a href="https://www.facebook.com/ECZambia/" target="_blank" rel="noopener"
+                     style="color:rgba(255,255,255,0.65); font-size:0.8rem; white-space:nowrap;">
+                    ECZ on Facebook
+                  </a>
+                  <a href="https://www.moe.gov.zm/" target="_blank" rel="noopener"
+                     style="color:rgba(255,255,255,0.65); font-size:0.8rem; white-space:nowrap;">
+                    MoE Website
+                  </a>
                 </div>
               </div>
             </div>
@@ -72,14 +92,15 @@
           <div class="container">
             <div class="row">
               <div class="col-md-12 text-center">
-                <p>&copy; {% now "Y" %} SAMBILILA CORE. All Rights Reserved.</p>
+                <p style="color:rgba(255,255,255,0.5); font-size:0.82rem;">
+                  &copy; {% now "Y" %} Sambilila Cole Educational System (SCES). All Rights Reserved.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
     </footer>
-    <!-- Footer Section End -->
 
     <!-- Scripts -->
     <script src="{% static 'landing/js/jquery-min.js' %}"></script>

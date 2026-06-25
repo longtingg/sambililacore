@@ -8,9 +8,9 @@ from django_school_management.institute.models import InstituteProfile
 from django_school_management.accounts.views import dashboard
 from django_school_management.utils.views import health_view
 
-admin.site.site_header = 'Django Administration'
-admin.site.site_title = 'Django Site Admin'
-admin.site.index_title = 'Django Administration'
+admin.site.site_header = 'SCES Administration'
+admin.site.site_title = 'SCES — Sambilila Cole Educational System'
+admin.site.index_title = 'SCES Site Administration'
 
 DJANGO_ADMIN_URL = settings.DJANGO_ADMIN_URL + '/'
 urlpatterns = [
